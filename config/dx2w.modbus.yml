@@ -432,6 +432,7 @@ registers:
     offset: 0.0
     description: "HP Output kW"
     writable: false
+    group: realtime
 
   hp_output_kwh:
     address: 578
