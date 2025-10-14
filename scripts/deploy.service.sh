@@ -34,9 +34,12 @@ if ! id -u "$APP_NAME" >/dev/null 2>&1; then
   useradd --system --no-create-home --shell /usr/sbin/nologin "$APP_NAME"
 fi
 
-# --- Create data and log directories ---
-mkdir -p "$DATA_DIR" "$LOG_DIR"
-chmod -R 755 "$DATA_DIR" "$LOG_DIR"
+# --- Create var directories ---
+mkdir -p "$CONFIG_DIR" "$DATA_DIR" "$LOG_DIR"
+
+# --- Set ownership and permissions ---
+chown -R "$APP_NAME:$APP_NAME" "$ROOT_DIR/var"
+chmod -R 755 "$ROOT_DIR/var"
 
 # --- Deploy binary ---
 chmod 755 "$BIN_PATH"
