@@ -45,8 +45,8 @@ func Init(logPath string) error {
 	once.Do(func() {
 		logFile, err = os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 		if err != nil {
-			err = fmt.Errorf("failed to open log file %s: %w", logPath, err)
-			return
+			fmt.Printf("failed to open log file %s: %v", logPath, err)
+			panic(err)
 		}
 
 		mw := io.MultiWriter(os.Stdout, logFile)
