@@ -30,7 +30,6 @@ import (
 	"burlo/v2/pkg/rootserv"
 	"burlo/v2/pkg/service"
 	"burlo/v2/pkg/sysmon"
-	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -42,14 +41,14 @@ func main() {
 		rootdir = "."
 	}
 
-	logger.Init(filepath.Join(rootdir, "var/logs/burlo.log"))
+	logfile := filepath.Join(rootdir, "var/logs/burlo.log")
+	logger.Init(logfile)
 
-	appConf := config.LoadFile(filepath.Join(rootdir, "var/config/burlo.json"))
-	modbusConf := modbus.LoadConfig(filepath.Join(rootdir, "var/config/dx2w.modbus.yml"))
+	appConfigFile := filepath.Join(rootdir, "var/config/burlo.json")
+	appConf := config.LoadFile(appConfigFile)
 
-	fmt.Println(filepath.Join(rootdir, "var/logs/burlo.log"))
-	fmt.Println(filepath.Join(rootdir, "var/config/burlo.json"))
-	fmt.Println(filepath.Join(rootdir, "var/config/dx2w.modbus.yml"))
+	modbusConfigFile := filepath.Join(rootdir, "var/config/modbus.json")
+	modbusConf := modbus.LoadConfig(modbusConfigFile)
 
 	// use conf to pass eventbus to whoever needs it
 	appConf.EventBus = eventbus.New()
