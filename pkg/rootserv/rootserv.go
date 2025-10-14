@@ -34,9 +34,9 @@ type RootServer struct {
 }
 
 // New creates a new RootServer bound to an address.
-func New(addr string) *RootServer {
+func New(port int) *RootServer {
 	return &RootServer{
-		addr:       addr,
+		addr:       fmt.Sprintf(":%d", port),
 		mux:        http.NewServeMux(),
 		subservers: make(map[string]string),
 		log:        logger.New("HTTPServer"),

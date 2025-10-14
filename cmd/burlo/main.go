@@ -59,7 +59,7 @@ func main() {
 	ctx, ctxCancel := appctx.New()
 
 	// init services
-	server := rootserv.New(":80")
+	server := rootserv.New(appConf.Server.Port)
 	sysMonitorService := sysmon.New()
 	phidgetsService := phidgets.New(appConf)
 	controllerService := controller.New(appConf)

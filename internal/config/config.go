@@ -23,7 +23,7 @@ import (
 )
 
 type ServerConfig struct {
-	Port string `json:"port"`
+	Port int `json:"port"`
 }
 
 type WeatherConfig struct {
@@ -90,8 +90,8 @@ func LoadFile(path string) *Config {
 		log.Fatalf("decode config: %v", err)
 	}
 	// apply defaults
-	if c.Server.Port == "" {
-		c.Server.Port = "8080"
+	if c.Server.Port == 0 {
+		c.Server.Port = 8080
 	}
 	if c.Weather.PollIntervalSeconds == 0 {
 		c.Weather.PollIntervalSeconds = 300
