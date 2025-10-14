@@ -10,13 +10,10 @@ if [ -z "$1" ]; then
 fi
 
 ROOT_DIR=$(realpath "$1")
-CONFIG_SRC="${ROOT_DIR}/config"
-
-BIN_PATH="${ROOT_DIR}/${APP_NAME}"
 CONFIG_DIR="${ROOT_DIR}/var/config"
 DATA_DIR="${ROOT_DIR}/var/cache"
 LOG_DIR="${ROOT_DIR}/var/logs"
-
+BIN_PATH="${ROOT_DIR}/${APP_NAME}"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}"
 
 # --- Validate binary ---
@@ -25,15 +22,24 @@ if [ ! -f "$BIN_PATH" ]; then
   exit 1
 fi
 
-# Create user if missing
+# --- Check config directory ---
+if [ ! -d "$CONFIG_DIR" ] || [ -z "$(ls -A "$CONFIG_DIR")" ]; then
+  echo "⚠️ Config directory '$CONFIG_DIR' is missing or empty."
+  echo "Please move your config files there before starting the service."
+fi
+
+# --- Create user if missing ---
 if ! id -u "$APP_NAME" >/dev/null 2>&1; then
   echo "Creating system user $APP_NAME"
   useradd --system --no-create-home --shell /usr/sbin/nologin "$APP_NAME"
 fi
 
-# Create directories
-mkdir -p "$CONFIG_DIR" "$DATA_DIR" "$LOG_DIR"
-rsync -a --ignore-existing "${CONFIG_SRC}/" "$CONFIG_DIR/"
+# --- Create data and log directories ---
+mkdir -p "$DATA_DIR" "$LOG_DIR"
+chmod -R 755 "$DATA_DIR" "$LOG_DIR"
+
+# --- Deploy binary ---
+chmod 755 "$BIN_PATH"
 
 # --- Create systemd service ---
 tee "$SERVICE_FILE" > /dev/null <<EOF
@@ -46,7 +52,7 @@ Type=simple
 User=${APP_NAME}
 Group=${APP_NAME}
 WorkingDirectory=${ROOT_DIR}
-ExecStart=${ROOT_DIR}/${APP_NAME}
+ExecStart=${BIN_PATH}
 Restart=on-failure
 RestartSec=5
 Environment=PROJECT_ROOT=${ROOT_DIR}
