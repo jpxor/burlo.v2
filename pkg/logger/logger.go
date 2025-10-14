@@ -45,15 +45,12 @@ func Init(logPath string) error {
 	once.Do(func() {
 		logFile, err = os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 		if err != nil {
+			err = fmt.Errorf("failed to open log file %s: %w", logPath, err)
 			return
 		}
 
 		mw := io.MultiWriter(os.Stdout, logFile)
 		baseLogger = log.New(mw, "", log.LstdFlags)
-
-		if baseLogger == nil {
-			panic("failed to create base logger")
-		}
 
 		// enable debug from env at startup if wanted
 		if os.Getenv("DEBUG") != "" {
