@@ -1,0 +1,631 @@
+modbus:
+  host: "192.168.50.60"
+  port: 502
+  slave_id: 200
+  timeout: 10
+
+poll_groups:
+  realtime: 15     # 15 seconds
+  fast: 180        # 3 min
+  default: 660     # 11 min
+
+registers:
+  aux_boiler_balance_point:
+    address: 336
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "AUX Boiler Balance Point"
+    writable: true
+
+  aux_boiler_kw:
+    address: 530
+    type: "holding"
+    data_type: "int16"
+    scale: 0.01
+    offset: 0.0
+    description: "AUX Boiler kW"
+    writable: false
+
+  aux_ct:
+    address: 152
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "AUX CT"
+    writable: true
+
+  aux_disable:
+    address: 542
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "AUX Disable"
+    writable: false
+
+  aux_kwh:
+    address: 580
+    type: "holding"
+    data_type: "uint16"
+    scale: 1.0
+    offset: 0.0
+    description: "AUX kWH"
+    writable: true
+
+  boiler_call_delay_duration:
+    address: 335
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Boiler Call Delay Duration"
+    writable: true
+
+  boiler_call_delay_status:
+    address: 631
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Boiler Call Delay Status"
+    writable: false
+
+  buffer_flow:
+    address: 338
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Buffer Flow"
+    writable: true
+    group: default # need to update this if we get a variable speed pump
+
+  buffer_tank_differential:
+    address: 538
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Buffer Tank Differential"
+    writable: false
+
+  buffer_tank_setpoint:
+    address: 537
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Buffer Tank Setpoint"
+    writable: false
+    group: fast
+
+  buffer_tank_temp:
+    address: 131
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Buffer Tank Temp"
+    writable: false
+    group: fast
+
+  buffer_thermostat:
+    address: 544
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Buffer Thermostat"
+    writable: false
+
+  chilled_water_differential:
+    address: 352
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Chilled Water Differential"
+    writable: true
+
+  chilled_water_setpoint:
+    address: 351
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Chilled Water Setpoint"
+    writable: true
+
+  comp_stall_or_delay_counter:
+    address: 554
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Comp Stall or Delay Counter"
+    writable: true
+
+  compressor_call:
+    address: 651
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Compressor Call"
+    writable: false
+    group: realtime
+
+  compressor_runtime:
+    address: 555
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Compressor Runtime"
+    writable: true
+
+  compressor_session_runtime:
+    address: 551
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Compressor Session Runtime"
+    writable: false
+
+  compressor_stall_delay:
+    address: 553
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Compressor Stall Delay"
+    writable: false
+
+  condensate_warning:
+    address: 536
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Condensate Warning"
+    writable: false
+
+  cooling_mode:
+    address: 652
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Cooling Mode"
+    writable: false
+
+  defrost:
+    address: 655
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Defrost"
+    writable: false
+
+  dew_point:
+    address: 179
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Dew Point"
+    writable: false
+
+  dew_point_safety_factor:
+    address: 370
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Dew Point Safety Factor"
+    writable: true
+
+  diversion_thermostat:
+    address: 546
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Diversion Thermostat"
+    writable: false
+
+  diversion_valve_percent_closed:
+    address: 532
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Diversion Valve % Closed"
+    writable: false
+
+  diversion_valve_closed:
+    address: 632
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Diversion Valve Closed"
+    writable: false
+
+  diversion_valve_differential:
+    address: 337
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Diversion Valve Differential"
+    writable: true
+    group: fast
+
+  diversion_valve_setpoint:
+    address: 539
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Diversion Valve Setpoint"
+    writable: false
+
+  dx2w_power:
+    address: 474
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "DX2W Power"
+    writable: true
+
+  exwt_offset:
+    address: 138
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "EXWT Offset"
+    writable: true
+
+  forced_defrost:
+    address: 471
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Forced Defrost"
+    writable: true
+
+  heating_mode:
+    address: 654
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Heating Mode"
+    writable: true
+
+  hot_water_design_temp:
+    address: 331
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Hot Water Design Temp"
+    writable: true
+
+  hot_water_differential:
+    address: 334
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Hot Water Differential"
+    writable: true
+
+  hot_water_max_temp:
+    address: 332
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Hot Water Max Temp"
+    writable: true
+
+  hot_water_min_temp:
+    address: 333
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Hot Water Min Temp"
+    writable: true
+    group: realtime
+
+  hot_water_target:
+    address: 534
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Hot Water Target"
+    writable: false
+
+  hp_circulator:
+    address: 831
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "HP Circulator"
+    writable: false
+    group: realtime
+
+  hp_ct:
+    address: 151
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "HP CT"
+    writable: false
+
+  hp_entering_water_temp:
+    address: 133
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "HP Entering Water Temp"
+    writable: false
+    group: realtime
+
+  hp_exiting_water_temp:
+    address: 134
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "HP Exiting Water Temp"
+    writable: false
+    group: realtime
+
+  hp_input_kw:
+    address: 550
+    type: "holding"
+    data_type: "int16"
+    scale: 0.01
+    offset: 0.0
+    description: "HP Input kW"
+    writable: false
+
+  hp_kwh:
+    address: 575
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "HP kWH"
+    writable: true
+
+  hp_operating_mode:
+    address: 357
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "HP Operating Mode"
+    writable: true
+
+  hp_output_kw:
+    address: 574
+    type: "holding"
+    data_type: "int16"
+    scale: 0.01
+    offset: 0.0
+    description: "HP Output kW"
+    writable: false
+
+  hp_output_kwh:
+    address: 578
+    type: "holding"
+    data_type: "uint16"
+    scale: 1.0
+    offset: 0.0
+    description: "HP Output kWH"
+    writable: true
+
+  hp_power_reset:
+    address: 374
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "HP Power reset"
+    writable: true
+
+  hp_test_jumper_status:
+    address: 559
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "HP Test Jumper Status"
+    writable: false
+
+  hp_water_delta_t:
+    address: 531
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "HP Water Delta-T"
+    writable: false
+    group: realtime
+
+  indoor_air_temp:
+    address: 111
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Indoor Air Temp"
+    writable: false
+
+  indoor_relative_humidity:
+    address: 171
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Indoor Relative Humidity"
+    writable: true
+
+  liquid_sub_cooling:
+    address: 558
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Liquid Sub-Cooling"
+    writable: false
+    group: fast
+
+  ll_pressure:
+    address: 174
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Liquid Line Pressure"
+    writable: false
+    group: fast
+
+  ll_temp:
+    address: 173
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Liquid Line Temp"
+    writable: false
+    group: fast
+
+  mix_water_temp:
+    address: 135
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Mix Water Temp"
+    writable: false
+    group: realtime
+
+  net_cop:
+    address: 573
+    type: "holding"
+    data_type: "int16"
+    scale: 0.01
+    offset: 0.0
+    description: "NET COP"
+    writable: false
+
+  odr_target_water_temp:
+    address: 533
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "ODR Target Water Temp"
+    writable: true
+
+  outdoor_air_design_temp:
+    address: 311
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Outdoor Air Design Temp"
+    writable: true
+
+  outside_air_temp:
+    address: 112
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Outside Air Temp"
+    writable: false
+    group: realtime
+
+  radiant_cooling_min:
+    address: 180
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Radiant Cooling Min"
+    writable: true
+
+  radiant_cooling_mode:
+    address: 451
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Radiant Cooling Mode"
+    writable: true
+
+  reset_hp_runtime:
+    address: 475
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Reset HP Runtime"
+    writable: true
+
+  reset_kwh_counters:
+    address: 481
+    type: "holding"
+    data_type: "bool"
+    scale: 1.0
+    offset: 0.0
+    description: "Reset KWH Counters"
+    writable: true
+
+  return_water_temp:
+    address: 136
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Return Water Temp"
+    writable: false
+    group: realtime
+
+  saturated_temp:
+    address: 557
+    type: "holding"
+    data_type: "int16"
+    scale: 1.0
+    offset: 0.0
+    description: "Saturated Temp"
+    writable: false
+    group: fast
+
+  time_since_last_defrost:
+    address: 552
+    type: "holding"
+    data_type: "int16"
+    scale: 0.1
+    offset: 0.0
+    description: "Time Since Last Defrost"
+    writable: false

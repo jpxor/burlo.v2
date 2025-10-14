@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DX2W Modbus - History</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<style>
+  body {
+    font-family: "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f6fa;
+    color: #333;
+  }
+  header {
+    background: #007bff;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #chart-container {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 1rem;
+  }
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  button {
+    margin-top: 1rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #007bff;
+    background: #007bff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+</style>
+</head>
+<body>
+<header id="page-title">Loading...</header>
+<main>
+  <div id="chart-container">
+    <canvas id="historyChart"></canvas>
+  </div>
+  <button onclick="goBack()">← Back</button>
+</main>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get("id") || "Unknown";
+document.getElementById("page-title").textContent = `History for ${id}`;
+
+let chartInstance;
+
+// Downsampling with median aggregation
+function downsample(data, maxPoints = 200) {
+  if (data.length <= maxPoints) return data;
+
+  const binSize = Math.ceil(data.length / maxPoints);
+  const downsampled = [];
+
+  for (let i = 0; i < data.length; i += binSize) {
+    const bin = data.slice(i, i + binSize);
+    const xs = bin.map(p => new Date(p.x).getTime());
+    const ys = bin.map(p => p.y).filter(v => v !== null);
+
+    if (ys.length === 0) {
+      downsampled.push({ x: new Date(xs[Math.floor(xs.length / 2)]), y: null });
+    } else {
+      ys.sort((a, b) => a - b);
+      const median = ys[Math.floor(ys.length / 2)];
+      downsampled.push({ x: new Date(xs[Math.floor(xs.length / 2)]), y: median });
+    }
+  }
+  return downsampled;
+}
+
+function downsampleByTime(data, timeWindowMs = 3 * 60 * 1000) {
+  const downsampled = [];
+  let binStart = data[0].x;
+  let bin = [];
+
+  for (const point of data) {
+    if (new Date(point.x) - new Date(binStart) > timeWindowMs) {
+      const ys = bin.map(p => p.y).filter(v => v != null).sort((a, b) => a - b);
+      const median = ys[Math.floor(ys.length / 2)] ?? null;
+      downsampled.push({ x: new Date(binStart), y: median });
+      bin = [];
+      binStart = point.x;
+    }
+    bin.push(point);
+  }
+
+  return downsampled;
+}
+
+
+async function fetchHistory() {
+  try {
+    const res = await fetch(`/dx2wModbus/api/history?id=${encodeURIComponent(id)}`);
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+
+    const mappedData = data.map(entry => ({
+      x: new Date(entry.timestamp),
+      y: entry.error ? null : entry.value
+    }));
+
+    const chartData = downsampleByTime(mappedData);
+    drawChart(chartData);
+  } catch (err) {
+    console.error("Failed to fetch history:", err);
+  }
+}
+
+function drawChart(data) {
+  const ctx = document.getElementById("historyChart").getContext("2d");
+
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [{
+        label: id,
+        data: data,
+        borderColor: "#007bff",
+        backgroundColor: "rgba(0,123,255,0.1)",
+        pointRadius: 3,
+        tension: 0.2,
+        fill: true,
+        spanGaps: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            tooltipFormat: 'MMM d, HH:mm:ss',
+            displayFormats: {
+              second: 'HH:mm:ss',
+              minute: 'HH:mm'
+            }
+          },
+          title: { display: true, text: 'Time' }
+        },
+        y: {
+          beginAtZero: false,
+          title: { display: true, text: 'Value' }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: ctx => {
+              const p = data[ctx.dataIndex];
+              return p.y === null ? `Error` : `Value: ${p.y}`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function goBack() {
+  window.location.href = '/dx2wModbus/';
+}
+
+// Auto-refresh every 5 seconds
+setInterval(fetchHistory, 5000);
+fetchHistory();
+</script>
+</body>
+</html>

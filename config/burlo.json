@@ -1,0 +1,24 @@
+{
+  "weather": {
+    "latitude": "0",
+    "longitude": "0",
+    "poll_interval_seconds": 300
+  },
+  "thermostat": {
+    "zwave_addr": "ws://192.168.50.2:3000",
+    "zwave_deviceId": 3
+  },
+  "phidgets": {
+    "http_addr": ":8081"
+  },
+  "dx2w": {
+    "modbus_addr": "192.168.50.30:502",
+    "poll_interval_seconds": 15
+  },
+  "controller": {},
+  "datalogger": {
+    "emoncms_addr": "http://192.168.50.2:8081",
+    "emoncms_apikey": "YOUR_API_KEY_HERE",
+    "interval_seconds": 15
+  }
+}

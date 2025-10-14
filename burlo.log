@@ -1,0 +1,115 @@
+2025/10/13 22:30:09 [ModbusConn] INFO: Connecting to 192.168.50.60:502...
+2025/10/13 22:30:09 [ModbusConn] INFO: Connected to 192.168.50.60:502
+2025/10/13 22:30:09 [HTTPServer] INFO: Attach: /logger
+2025/10/13 22:30:09 [HTTPServer] INFO: Attach: /monitor
+2025/10/13 22:30:09 [HTTPServer] INFO: Attach: /phidgets
+2025/10/13 22:30:09 [HTTPServer] INFO: Attach: /dx2wModbus
+2025/10/13 22:30:09 [HTTPServer] INFO: Attach: /thermostat
+2025/10/13 22:30:09 [HTTPServer] INFO: Attach: /weather
+2025/10/13 22:30:09 [DX2WModbus] INFO: Running...
+2025/10/13 22:30:09 [DX2WModbus] INFO: Starting group "fast" poller (every 3m0s)
+2025/10/13 22:30:09 [Thermostat] INFO: starting virtual thermostat
+2025/10/13 22:30:09 [Thermostat] INFO: starting Z-Wave backend
+2025/10/13 22:30:09 [HTTPServer] INFO: Running...
+2025/10/13 22:30:09 [Controller] INFO: Running...
+2025/10/13 22:30:09 [DX2WModbus] INFO: Starting group "default" poller (every 11m0s)
+2025/10/13 22:30:09 [DataLogger] INFO: Running...
+2025/10/13 22:30:09 [Phidgets  ] INFO: Running...
+2025/10/13 22:30:09 [ModbusConn] INFO: WriteRegister 'hot_water_design_temp' <- 95
+2025/10/13 22:30:09 [DX2WModbus] INFO: Starting group "realtime" poller (every 15s)
+2025/10/13 22:30:09 [ZWaveJS   ] INFO: Connected
+2025/10/13 22:30:09 [ZWaveJS   ] INFO: unhandled zwave-js message type: version
+2025/10/13 22:30:09 [ZWaveJS   ] INFO: messageId 'initialize' succeeded
+2025/10/13 22:30:09 [Thermostat] INFO: found 1 thermostat node(s)
+2025/10/13 22:30:09 [Thermostat] INFO: using thermostat nodeId 3
+2025/10/13 22:30:09 [Thermostat] INFO: zwave node [name=Thermostat, location=Main]
+2025/10/13 22:30:09 [Thermostat] INFO: Current temperature: 21.5 °C
+2025/10/13 22:30:09 [Thermostat] INFO: Current humidity: 58%
+2025/10/13 22:30:09 [Thermostat] INFO: Current mode: 1
+2025/10/13 22:30:09 [Thermostat] INFO: Current state: 0
+2025/10/13 22:30:09 [Thermostat] INFO: Current setpoint: 21 °C
+2025/10/13 22:30:09 [Controller] INFO: update: waiting for full data: weather=false thermostat=true
+2025/10/13 22:30:09 [Phidgets  ] ERROR: (phidgets.service.go:70) cmd exited with error: exit status 2
+2025/10/13 22:30:09 [Phidgets  ] INFO: Restarting
+2025/10/13 22:30:11 [Phidgets  ] INFO: Running...
+2025/10/13 22:30:11 [Phidgets  ] ERROR: (phidgets.service.go:70) cmd exited with error: exit status 2
+2025/10/13 22:30:11 [Phidgets  ] INFO: Restarting
+2025/10/13 22:30:13 [Phidgets  ] INFO: Running...
+2025/10/13 22:30:14 [Phidgets  ] ERROR: (phidgets.service.go:70) cmd exited with error: exit status 2
+2025/10/13 22:30:14 [Phidgets  ] INFO: Restarting
+2025/10/13 22:30:16 [Phidgets  ] INFO: Running...
+2025/10/13 22:30:16 [Phidgets  ] ERROR: (phidgets.service.go:70) cmd exited with error: exit status 2
+2025/10/13 22:30:16 [Phidgets  ] INFO: Restarting
+2025/10/13 22:30:18 [Phidgets  ] INFO: Running...
+2025/10/13 22:30:18 [Phidgets  ] ERROR: (phidgets.service.go:70) cmd exited with error: exit status 2
+2025/10/13 22:30:18 [Phidgets  ] INFO: Restarting
+2025/10/13 22:30:20 [Phidgets  ] INFO: Running...
+2025/10/13 22:30:21 [Phidgets  ] ERROR: (phidgets.service.go:70) cmd exited with error: exit status 2
+2025/10/13 22:30:21 [Phidgets  ] INFO: Restarting
+2025/10/13 22:30:21 [SigHandler] INFO: Received signal: interrupt
+2025/10/13 22:30:21 [DX2WModbus] INFO: Stopping group "realtime" poller
+2025/10/13 22:30:21 [DX2WModbus] INFO: Stopping group "fast" poller
+2025/10/13 22:30:21 [ModbusConn] INFO: WriteRegister 'hot_water_design_temp' <- 107.60000000000001
+2025/10/13 22:30:21 [Thermostat] INFO: stopping virtual thermostat
+2025/10/13 22:30:21 [Thermostat] INFO: stopping Z-Wave backend
+2025/10/13 22:30:21 [ZWaveJS   ] INFO: Closed
+2025/10/13 22:30:21 [DataLogger] INFO: Stopped.
+2025/10/13 22:30:21 [HTTPServer] INFO: Stopped
+2025/10/13 22:30:21 [DX2WModbus] INFO: Stopped
+2025/10/13 22:30:23 [Phidgets  ] INFO: Stopped
+2025/10/13 22:30:38 [DX2WModbus] INFO: Stopping group "default" poller
+2025/10/13 22:30:38 [Controller] INFO: Stopped
+2025/10/13 22:31:17 [ModbusConn] INFO: Connecting to 192.168.50.60:502...
+2025/10/13 22:31:17 [ModbusConn] INFO: Connected to 192.168.50.60:502
+2025/10/13 22:31:17 [DX2WModbus] INFO: history restored from snapshot (37 registers)
+2025/10/13 22:31:17 [HTTPServer] INFO: Attach: /logger
+2025/10/13 22:31:17 [HTTPServer] INFO: Attach: /monitor
+2025/10/13 22:31:17 [HTTPServer] INFO: Attach: /phidgets
+2025/10/13 22:31:17 [HTTPServer] INFO: Attach: /dx2wModbus
+2025/10/13 22:31:17 [HTTPServer] INFO: Attach: /thermostat
+2025/10/13 22:31:17 [HTTPServer] INFO: Attach: /weather
+2025/10/13 22:31:17 [Thermostat] INFO: starting virtual thermostat
+2025/10/13 22:31:17 [DataLogger] INFO: Running...
+2025/10/13 22:31:17 [DX2WModbus] INFO: Running...
+2025/10/13 22:31:17 [DX2WModbus] INFO: Starting group "realtime" poller (every 15s)
+2025/10/13 22:31:17 [DX2WModbus] INFO: Starting group "fast" poller (every 3m0s)
+2025/10/13 22:31:17 [Thermostat] INFO: starting Z-Wave backend
+2025/10/13 22:31:17 [HTTPServer] INFO: Running...
+2025/10/13 22:31:17 [Controller] INFO: Running...
+2025/10/13 22:31:17 [DX2WModbus] INFO: Starting group "default" poller (every 11m0s)
+2025/10/13 22:31:17 [Phidgets  ] INFO: Running...
+2025/10/13 22:31:17 [ModbusConn] INFO: WriteRegister 'hot_water_design_temp' <- 95
+2025/10/13 22:31:17 [ZWaveJS   ] INFO: Connected
+2025/10/13 22:31:17 [ZWaveJS   ] INFO: unhandled zwave-js message type: version
+2025/10/13 22:31:17 [ZWaveJS   ] INFO: messageId 'initialize' succeeded
+2025/10/13 22:31:17 [Thermostat] INFO: found 1 thermostat node(s)
+2025/10/13 22:31:17 [Thermostat] INFO: using thermostat nodeId 3
+2025/10/13 22:31:17 [Thermostat] INFO: zwave node [name=Thermostat, location=Main]
+2025/10/13 22:31:17 [Thermostat] INFO: Current temperature: 21.5 °C
+2025/10/13 22:31:17 [Thermostat] INFO: Current humidity: 58%
+2025/10/13 22:31:17 [Thermostat] INFO: Current mode: 1
+2025/10/13 22:31:17 [Thermostat] INFO: Current state: 0
+2025/10/13 22:31:17 [Thermostat] INFO: Current setpoint: 21 °C
+2025/10/13 22:31:18 [Controller] INFO: update: waiting for full data: weather=false thermostat=true
+2025/10/13 22:31:18 [ModbusConn] INFO: WriteRegister 'hot_water_min_temp' <- 79.69118
+2025/10/13 22:31:18 [Controller] INFO: update inputs: room=21.50°C, setpoint=21.00°C, outdoor=13.28°C, ModeHeat=true
+2025/10/13 22:31:18 [Controller] INFO: update outputs: LWT=26.50°C, Corr=-0.50°C, Duty=24%
+2025/10/13 22:31:32 [DataLogger] INFO: Posted data to emoncms node "dx2w": map[BUFFER_FLOW:11.600000381469727 BUFFER_TANK_SETPOINT:80 BUFFER_TANK_TEMP:77.19999694824219 COMPRESSOR_CALL:0 HOT_WATER_MIN_TEMP:80 HP_CIRCULATOR:0 HP_ENTERING_WATER_TEMP:76.69999694824219 HP_EXITING_WATER_TEMP:77.19999694824219 HP_INPUT_KW:0 HP_OUTPUT_KW:0 MIX_WATER_TEMP:77.19999694824219 OUTSIDE_AIR_TEMP:55.900001525878906 RETURN_WATER_TEMP:75.19999694824219]
+2025/10/13 22:31:32 [DataLogger] INFO: Posted data to emoncms node "controller": map[circ_target_duty:23.976596820282083 indoor_air_temp:21.5 lwtTarget:26.4951 outdoor_air_temp:13.277777777777777 setpoint:21 tstat_call:0]
+2025/10/13 22:31:47 [DataLogger] INFO: Posted data to emoncms node "dx2w": map[BUFFER_FLOW:11.600000381469727 BUFFER_TANK_SETPOINT:80 BUFFER_TANK_TEMP:77.19999694824219 COMPRESSOR_CALL:0 HOT_WATER_MIN_TEMP:80 HP_CIRCULATOR:0 HP_ENTERING_WATER_TEMP:76.69999694824219 HP_EXITING_WATER_TEMP:77.19999694824219 HP_INPUT_KW:0 HP_OUTPUT_KW:0 MIX_WATER_TEMP:77.19999694824219 OUTSIDE_AIR_TEMP:55.900001525878906 RETURN_WATER_TEMP:75.19999694824219]
+2025/10/13 22:31:47 [DataLogger] INFO: Posted data to emoncms node "controller": map[circ_target_duty:23.976596820282083 indoor_air_temp:21.5 lwtTarget:26.4951 outdoor_air_temp:13.277777777777777 setpoint:21 tstat_call:0]
+2025/10/13 22:31:57 [SigHandler] INFO: Received signal: interrupt
+2025/10/13 22:31:57 [DataLogger] INFO: Stopped.
+2025/10/13 22:31:57 [DX2WModbus] INFO: Stopping group "default" poller
+2025/10/13 22:31:57 [DX2WModbus] INFO: Stopping group "fast" poller
+2025/10/13 22:31:57 [Thermostat] INFO: stopping virtual thermostat
+2025/10/13 22:31:57 [Thermostat] INFO: stopping Z-Wave backend
+2025/10/13 22:31:57 [HTTPServer] INFO: Stopped
+2025/10/13 22:31:57 [ModbusConn] INFO: WriteRegister 'hot_water_design_temp' <- 107.60000000000001
+2025/10/13 22:31:57 [ZWaveJS   ] INFO: Closed
+2025/10/13 22:31:57 [DX2WModbus] INFO: Stopped
+2025/10/13 22:31:57 [Phidgets  ] ERROR: (phidgets.service.go:70) cmd exited with error: exit status 1
+2025/10/13 22:31:57 [Phidgets  ] INFO: Restarting
+2025/10/13 22:31:59 [DX2WModbus] INFO: Stopping group "realtime" poller
+2025/10/13 22:31:59 [Phidgets  ] INFO: Stopped
+2025/10/13 22:31:59 [Controller] INFO: Stopped

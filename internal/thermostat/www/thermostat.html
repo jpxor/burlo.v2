@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="icon" href="/thermostat/favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thermostat</title>
+  <style>
+    html {
+      background: #262525;
+      background: linear-gradient(145deg, #303030 0%, #262525 39%, #262525 100%);
+      height: 100vh;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      color: #c7c5c5;
+      flex-direction: column;
+    }
+
+    hr {
+      border-color: #3a3a3a;
+      margin: 1.6rem;
+    }
+
+    .thermostat {
+      background: #141414;
+      background: linear-gradient(145deg, #202020 0%, #151515 39%, #101010 100%);
+      border-radius: 1rem;
+      padding: 2rem;
+      padding-bottom: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .label {
+      font-size: 2rem;
+      color: rgb(150, 150, 150);
+    }
+
+    .temperature {
+      font-size: 6.6rem;
+      color: rgb(200, 200, 200);
+    }
+
+    .setpoint-label {
+      font-size: 1rem;
+      color: rgb(150, 150, 150);
+    }
+
+    .setpoint,
+    .humidity {
+      font-size: 3rem;
+      color: rgb(200, 200, 200);
+      margin-top: -0.5rem;
+    }
+
+    .mode {
+      font-size: 1rem;
+      color: #888;
+    }
+
+    .dial {
+      position: relative;
+      left: 4rem;
+      top: -2rem;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .dial button {
+      position: absolute;
+      width: 100%;
+      height: 50%;
+      border: none;
+      background: #2c2c2c;
+      color: #b4b4b4;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .dial button:hover {
+      background: #3a3a3a;
+    }
+
+    .dial button:active {
+      background: #555;
+    }
+
+    .dial .up {
+      top: 0;
+      border-bottom: 1px solid #121212;
+      border-top-left-radius: 60px;
+      border-top-right-radius: 60px;
+    }
+
+    .dial .down {
+      bottom: 0;
+      border-top: 1px solid #121212;
+      border-bottom-left-radius: 60px;
+      border-bottom-right-radius: 60px;
+    }
+
+    #thermoIcon path {
+      transition: fill 0.8s ease;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.6rem;
+      padding-bottom: 0.6rem;
+    }
+
+    .mode-container {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 0.4rem;
+      width: 6rem;
+    }
+
+    /* === Utility flex classes === */
+    .flex-center {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .flex-column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .flex-baseline {
+      display: flex;
+      align-items: baseline;
+      gap: 0.25rem;
+    }
+
+    .percent-label {
+      font-size: 2rem;
+    }
+
+    .icon-svg {
+      width: 3rem;
+      height: 3rem;
+      fill-rule: evenodd;
+      clip-rule: evenodd;
+      stroke-linejoin: round;
+      stroke-miterlimit: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="thermostat">
+    <div class="flex-center">
+      <div id="temperature" class="temperature">--</div>
+      <div id="tempUnit" class="label">°C</div>
+    </div>
+
+    <div class="status-row">
+      <div class="flex-column">
+        <div class="setpoint-label">Humidity</div>
+        <div class="flex-baseline">
+          <div id="humidity" class="humidity">--</div>
+          <div class="percent-label">%</div>
+        </div>
+      </div>
+      <div class="mode-container">
+        <svg id="thermoIcon" class="icon-svg" viewBox="0 0 1024 1024"
+          xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <g transform="matrix(1.55284,0,0,1.55284,-271.857,-214.715)">
+              <path
+                d="M478.452,583.599C348.403,566.259 315.953,423.268 394.775,344.915C402.094,337.64 455.027,300.309 467.638,265.618C478.652,235.322 470.26,169.998 465.843,166.614C543.011,198.607 570.133,265.855 570.858,282.273C571.275,291.715 548.111,384.271 557.706,394.47C557.718,394.444 589.271,332.787 624.749,311.917C624.749,369.355 667.781,423.976 635.86,505.602C634.044,510.245 619.093,548.477 603.001,558.55C582.085,571.643 537.204,583.184 531.29,584.704L531.489,582.704C596.747,468.503 452.934,421.038 500.365,361.749L499.365,360.749C475.461,380.227 472.493,377.221 455.299,402.585C418.328,457.119 430.665,495.631 433.187,503.502C444.118,537.626 472.935,576.048 477.247,581.798L478.452,583.599Z"
+                style="fill:rgb(77,77,77);" />
+            </g>
+            <g>
+              <path
+                d="M129.517,807.365C124.684,788.031 127.295,785.166 145.94,778.368C180.307,765.836 216.683,747.918 321.946,749.402C393.002,750.405 499.219,803.381 585.307,827.426C726.851,866.961 845.606,767.547 864.705,765.744C873.314,764.931 887.899,777.087 872.775,794.022C845.185,824.915 709.522,876.64 630.871,868.418C544.644,859.404 375.022,783.058 304.195,779.727C254.18,777.375 174.266,804.404 163.381,808.086C143.607,814.773 139.299,821.545 127.356,804.483L129.517,807.365Z"
+                style="fill:rgb(77,77,77);" />
+              <g transform="matrix(1,0,0,1,0,127)">
+                <path
+                  d="M129.517,807.365C124.684,788.031 127.295,785.166 145.94,778.368C180.307,765.836 216.683,747.918 321.946,749.402C393.002,750.405 499.219,803.381 585.307,827.426C726.851,866.961 845.606,767.547 864.705,765.744C873.314,764.931 887.899,777.087 872.775,794.022C845.185,824.915 709.522,876.64 630.871,868.418C544.644,859.404 375.022,783.058 304.195,779.727C254.18,777.375 174.266,804.404 163.381,808.086C143.607,814.773 139.299,821.545 127.356,804.483L129.517,807.365Z"
+                  style="fill:rgb(77,77,77);" />
+              </g>
+            </g>
+          </g>
+        </svg>
+        <div id="mode" class="mode">--</div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="flex-column">
+      <div class="setpoint-label">Setpoint</div>
+      <div id="setpoint" class="setpoint">--</div>
+    </div>
+  </div>
+
+  <div class="dial">
+    <button class="up" onclick="changeSetpoint(0.5)">▲</button>
+    <button class="down" onclick="changeSetpoint(-0.5)">▼</button>
+  </div>
+
+    <script>
+        const tempEl = document.getElementById("temperature");
+        const setpointEl = document.getElementById("setpoint");
+        const modeEl = document.getElementById("mode");
+        const humidityEl = document.getElementById("humidity");
+        const thermoIcon = document.getElementById('thermoIcon');
+        const tempUnit = document.getElementById('tempUnit');
+        var ws; // websocket
+
+        var savedMode = 0;
+        var savedState = 0;
+
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const host = window.location.host; // includes hostname and port
+            ws = new WebSocket(`${protocol}//${host}/thermostat/ws`);
+
+            ws.onopen = () => {
+                console.log("Connected to server");
+            };
+            ws.onclose = (e) => {
+                let reconnectInterval = 2000; // 2 seconds
+                console.log(`WebSocket closed, retrying in ${reconnectInterval / 1000}s...`, e.reason);
+                setTimeout(connectWebSocket, reconnectInterval);
+            };
+
+            var tconvert = (data, temp) => {
+                let Unit_Fahrenheit = 1;
+                var retTemp = temp;
+                if (data.units) {
+                    if (data.units == Unit_Fahrenheit) {
+                        retTemp = temp * 9 / 5 + 32;
+                    }
+                }
+                return Number(retTemp).toFixed(1);
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log(data);
+
+                var modeOrStateChanged = false;
+                if (data.temperature) {
+                    tempEl.textContent = tconvert(data, data.temperature);
+                }
+                if (data.setpoint) {
+                    setpointEl.textContent = tconvert(data, data.setpoint);
+                }
+                if (data.humidity && humidityEl) {
+                    humidityEl.textContent = `${data.humidity.toFixed(0)}`;
+                }
+                if (data.units == 1) {
+                    tempUnit.textContent = "°F";
+                } else {
+                    tempUnit.textContent = "°C";
+                }
+                if (data.mode !== undefined) {
+                    savedMode = data.mode;
+                    modeOrStateChanged = true;
+                }
+                if (data.state !== undefined) {
+                    savedState = data.state;
+                    modeOrStateChanged = true;
+                }
+                if (modeOrStateChanged) {
+                    if (savedMode === 0) {
+                        // mode off 
+                        modeEl.textContent = `OFF`;
+                        thermoIcon.querySelectorAll('path').forEach(path => {
+                            path.style.fill = '#202020';
+                        });
+                    } else if (savedState === 1) {
+                        // mode on, heating
+                        modeEl.textContent = `HEATING`;
+                        thermoIcon.querySelectorAll('path').forEach(path => {
+                            path.style.fill = '#AF3040';
+                        });
+                    } else if (savedState === 0) {
+                        // mode on, idle
+                        modeEl.textContent = `IDLE`;
+                        thermoIcon.querySelectorAll('path').forEach(path => {
+                            path.style.fill = '#655050';
+                        });
+                    }
+                }
+            };
+        }
+
+        function changeSetpoint(delta) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ command: 'change_setpoint', delta }));
+            }
+        }
+
+        connectWebSocket();
+
+    </script>
+</body>
+
+</html>

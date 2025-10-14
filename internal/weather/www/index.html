@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Outdoor Temperature (24h)</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            padding: 24px;
+            background: #f8f8f8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Outdoor Temperature (last 24h)</h1>
+        <div class="card">
+            <canvas id="chart" width="860" height="300"></canvas>
+        </div>
+        <p>Chart updates automatically at the same interval as the weather data poll.</p>
+    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Configuration: update interval (ms) should match weather poll interval
+        const POLL_INTERVAL_MS = 30000; // 30s, match weather service polling
+
+        let chart;
+        async function fetchData() {
+            const res = await fetch('./api/history');
+            const data = await res.json();
+            return data.map(x => ({ t: new Date(x.time), y: x.temp_c }));
+        }
+
+        async function renderChart() {
+            const data = await fetchData();
+            const ctx = document.getElementById('chart').getContext('2d');
+            const labels = data.map(d => d.t.toLocaleTimeString());
+            const values = data.map(d => d.y);
+
+            if (!chart) {
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '°C',
+                            data: values,
+                            tension: 0.2,
+                            borderColor: 'rgba(75,192,192,1)',
+                            backgroundColor: 'rgba(75,192,192,0.2)',
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: true } },
+                        scales: { x: { display: true }, y: { beginAtZero: false } }
+                    }
+                });
+            } else {
+                chart.data.labels = labels;
+                chart.data.datasets[0].data = values;
+                chart.update();
+            }
+        }
+
+        // Initial render
+        renderChart();
+        // Update at the same rate as weather service poll
+        setInterval(renderChart, POLL_INTERVAL_MS);
+    </script>
+</body>
+
+</html>

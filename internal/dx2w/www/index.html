@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DX2W Modbus Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/js/all.min.js" defer></script>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: #f5f6fa;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: #f0f0f0;
+    }
+
+    td input {
+      width: 100px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: none;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .error-icon {
+      color: red;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <header>DX2W Modbus Dashboard</header>
+  <main>
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>Register Name</th>
+          <th>Value</th>
+          <th>Error</th>
+          <th>History</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <script>
+    // Keep track of rows to only update cells
+    const rows = {};
+
+    async function fetchData() {
+      try {
+        const res = await fetch('/dx2wModbus/api/values');
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+        const tbody = document.getElementById('dataTable').querySelector('tbody');
+
+        Object.entries(data).forEach(([id, v]) => {
+          let row = rows[id];
+          if (!row) {
+            row = tbody.insertRow();
+            row.insertCell().textContent = v.description;    // Register Name
+            row.insertCell().textContent = v.value;          // Value
+            row.insertCell();                                 // Error
+            row.insertCell();                                 // History
+            row.insertCell();                                 // Actions
+            rows[id] = row;
+
+            // History button
+            const historyCell = row.cells[3];
+            historyCell.innerHTML = `<button onclick="openHistory('${v.id}')">History</button>`;
+
+            // Actions input/button
+            const actionsCell = row.cells[4];
+            if (v.writable) {
+              actionsCell.innerHTML = `<input id="input-${v.id}" placeholder="new value">
+                                   <button onclick="updateValue('${v.id}')">Set</button>`;
+            } else {
+              actionsCell.textContent = '';
+            }
+          }
+
+          // Update value cell
+          row.cells[1].textContent = v.value;
+
+          // Update error cell
+          const errorCell = row.cells[2];
+          errorCell.innerHTML = ''; // clear previous content
+
+          if (v.error) {
+            const icon = document.createElement('span');
+            icon.className = 'error-icon';
+            icon.title = v.error;
+            icon.textContent = '⚠'; // warning symbol
+            icon.addEventListener('click', () => showError(v.error));
+            errorCell.appendChild(icon);
+          }
+        });
+      } catch (err) {
+        console.error("Failed to fetch data:", err);
+      }
+    }
+
+
+    function openHistory(id) {
+      window.location.href = `/dx2wModbus/history.html?id=${encodeURIComponent(id)}`;
+    }
+
+    async function updateValue(id) {
+      const input = document.getElementById(`input-${id}`);
+      const val = input.value;
+      if (!val) return;
+      try {
+        await fetch('/dx2wModbus/api/write', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id, value: parseFloat(val) })
+        });
+        input.value = '';
+        fetchData();
+      } catch (err) {
+        console.error("Failed to write value:", err);
+      }
+    }
+
+    function showError(errorText) {
+      alert(errorText);
+    }
+
+    // Refresh every 2 seconds
+    setInterval(fetchData, 2000);
+    fetchData();
+  </script>
+</body>
+
+</html>
