@@ -86,6 +86,12 @@ func IsDebug() bool {
 
 func New(prefix string) *Logger {
 	Init("default.log")
+	if baseLogger == nil {
+		panic("base logger not initialized, call logger.Init first")
+	}
+	if baseLogger.Writer() == nil {
+		panic("base logger writer not initialized")
+	}
 	return &Logger{
 		prefix: prefix,
 		logger: log.New(baseLogger.Writer(), "", log.LstdFlags),
