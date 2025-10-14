@@ -31,16 +31,34 @@ import (
 	"burlo/v2/pkg/service"
 	"burlo/v2/pkg/sysmon"
 	"os"
+	"path/filepath"
 )
 
 func main() {
-	logger.Init("burlo.log")
 
-	appConf := config.LoadFile("config/burlo.json")
-	modbusConf := modbus.LoadConfig("config/dx2w.modbus.yml")
+	logDir := os.Getenv("LOG_DIR")
+	if logDir == "" {
+		logDir = "./log"
+	}
+
+	configDir := os.Getenv("CONFIG_DIR")
+	if configDir == "" {
+		configDir = "./config"
+	}
+
+	dataDir := os.Getenv("DATA_DIR")
+	if dataDir == "" {
+		dataDir = "./data"
+	}
+
+	logger.Init(filepath.Join(logDir, "burlo.log"))
+
+	appConf := config.LoadFile(filepath.Join(configDir, "burlo.json"))
+	modbusConf := modbus.LoadConfig(filepath.Join(configDir, "dx2w.modbus.yml"))
 
 	// use conf to pass eventbus to whoever needs it
 	appConf.EventBus = eventbus.New()
+	appConf.DataDir = dataDir
 
 	ctx, ctxCancel := appctx.New()
 

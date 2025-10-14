@@ -70,6 +70,7 @@ type Config struct {
 	// not loaded from file, but added here to
 	// pass to all services alongside config
 	EventBus *eventbus.Bus
+	DataDir  string
 }
 
 func LoadFile(path string) *Config {

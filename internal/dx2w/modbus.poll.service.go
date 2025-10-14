@@ -32,7 +32,7 @@ import (
 
 var ModbusClient *modbus.Client
 
-const snapshotFile = "dx2w_history.json.gz"
+const snapshotFilename = "dx2w_history.json.gz"
 
 type HistoryEntry struct {
 	Timestamp time.Time `json:"timestamp"`
@@ -48,6 +48,7 @@ type HistoryService struct {
 	log          *logger.Logger
 	ctx          context.Context
 	modbusConfig *modbus.Config
+	snapshotFile string
 }
 
 func New(modbusConfig *modbus.Config, appConfig *config.Config) *HistoryService {
@@ -61,6 +62,7 @@ func New(modbusConfig *modbus.Config, appConfig *config.Config) *HistoryService 
 		history:      make(map[string][]HistoryEntry),
 		registers:    modbusConfig.Registers,
 		log:          logger.New("DX2WModbus"),
+		snapshotFile: filepath.Join(appConfig.DataDir, snapshotFilename),
 	}
 
 	s.loadFromDisk()
@@ -195,7 +197,7 @@ func (s *HistoryService) saveToDisk() {
 		return
 	}
 
-	tmpPath := snapshotFile + ".tmp"
+	tmpPath := s.snapshotFile + ".tmp"
 	file, err := os.Create(tmpPath)
 	if err != nil {
 		s.log.Error("failed to create temp snapshot file: %v", err)
@@ -219,7 +221,7 @@ func (s *HistoryService) saveToDisk() {
 		s.log.Error("failed to fsync snapshot: %v", err)
 	}
 	file.Close()
-	if err := os.Rename(tmpPath, snapshotFile); err != nil {
+	if err := os.Rename(tmpPath, s.snapshotFile); err != nil {
 		s.log.Error("failed to rename snapshot file: %v", err)
 		return
 	}
@@ -227,7 +229,7 @@ func (s *HistoryService) saveToDisk() {
 }
 
 func (s *HistoryService) loadFromDisk() {
-	path := filepath.Clean(snapshotFile)
+	path := filepath.Clean(s.snapshotFile)
 	file, err := os.Open(path)
 	if err != nil {
 		if !os.IsNotExist(err) {
