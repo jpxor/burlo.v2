@@ -22,6 +22,10 @@ import (
 	"os"
 )
 
+type ServerConfig struct {
+	Port string `json:"port"`
+}
+
 type WeatherConfig struct {
 	Latitude  string `json:"latitude"`
 	Longitude string `json:"longitude"`
@@ -60,6 +64,7 @@ type DataLoggerConfig struct {
 }
 
 type Config struct {
+	Server     ServerConfig     `json:"server"`
 	Weather    WeatherConfig    `json:"weather"`
 	Thermostat ThermostatConfig `json:"thermostat"`
 	Phidgets   PhidgetsConfig   `json:"phidgets"`
@@ -85,6 +90,9 @@ func LoadFile(path string) *Config {
 		log.Fatalf("decode config: %v", err)
 	}
 	// apply defaults
+	if c.Server.Port == "" {
+		c.Server.Port = "8080"
+	}
 	if c.Weather.PollIntervalSeconds == 0 {
 		c.Weather.PollIntervalSeconds = 300
 	}
