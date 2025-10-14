@@ -19,6 +19,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -42,7 +43,8 @@ func (s *HistoryService) NewServeMux() http.Handler {
 	mux.HandleFunc("/api/history", s.handleAPIHistory)
 
 	// Serve the www directory
-	mux.Handle("/", http.FileServer(http.Dir("internal/dx2w/www")))
+	assetsDir := filepath.Join(s.rootDir, "internal/dx2w/www")
+	mux.Handle("/", http.FileServer(http.Dir(assetsDir)))
 	return mux
 }
 

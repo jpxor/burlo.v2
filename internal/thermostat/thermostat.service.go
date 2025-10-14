@@ -30,6 +30,7 @@ type VirtThermostat struct {
 	conf        config.ThermostatConfig
 	evBus       *eventbus.Bus
 	clientQueue chan WebAppRequest
+	rootDir     string
 
 	backend Backend
 	data    vtData
@@ -78,6 +79,7 @@ func NewZWaveThermostat(conf *config.Config) *VirtThermostat {
 
 	backend := NewZWaveBackend(conf, log)
 	vt := &VirtThermostat{
+		rootDir:     conf.RootDir,
 		conf:        conf.Thermostat,
 		evBus:       conf.EventBus,
 		clientQueue: make(chan WebAppRequest, 8),

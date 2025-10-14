@@ -49,6 +49,7 @@ type HistoryService struct {
 	ctx          context.Context
 	modbusConfig *modbus.Config
 	snapshotFile string
+	rootDir      string
 }
 
 func New(modbusConfig *modbus.Config, appConfig *config.Config) *HistoryService {
@@ -63,6 +64,7 @@ func New(modbusConfig *modbus.Config, appConfig *config.Config) *HistoryService 
 		registers:    modbusConfig.Registers,
 		log:          logger.New("DX2WModbus"),
 		snapshotFile: filepath.Join(appConfig.DataDir, snapshotFilename),
+		rootDir:      appConfig.RootDir,
 	}
 
 	s.loadFromDisk()

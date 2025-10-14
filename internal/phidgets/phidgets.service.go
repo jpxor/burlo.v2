@@ -23,11 +23,9 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 )
-
-// Path to your Python service script
-const pythonScript = "internal/phidgets/phidgets.service.py"
 
 type Manager struct {
 	conf *config.Config
@@ -42,6 +40,7 @@ func New(conf *config.Config) *Manager {
 }
 
 func (m *Manager) Run(ctx context.Context) {
+	pythonScript := filepath.Join(m.conf.RootDir, "internal/phidgets/phidgets.service.py")
 	for {
 		// If context is canceled, exit loop (shutdown requested)
 		select {

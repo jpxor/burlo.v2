@@ -5,21 +5,21 @@ APP_NAME="burlo"
 SERVICE_NAME="${APP_NAME}.service"
 
 if [ -z "$1" ]; then
-  echo "Usage: $0 <path-to-source-root>"
+  echo "Usage: $0 <path-to-project-root>"
   exit 1
 fi
 
-SRC_DIR=$(realpath "$1")
-BIN_PATH="${SRC_DIR}/build/${APP_NAME}"
-CONFIG_SRC="${SRC_DIR}/config"
+ROOT_DIR=$(realpath "$1")
+CONFIG_SRC="${ROOT_DIR}/config"
 
-INSTALL_BIN_DIR="/usr/local/bin"
-CONFIG_DIR="/etc/${APP_NAME}"
-DATA_DIR="/var/lib/${APP_NAME}"
-LOG_DIR="/var/log/${APP_NAME}"
+BIN_PATH="${ROOT_DIR}/${APP_NAME}"
+CONFIG_DIR="${ROOT_DIR}/var/config"
+DATA_DIR="${ROOT_DIR}/var/cache"
+LOG_DIR="${ROOT_DIR}/var/logs"
+
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}"
 
-# Validate binary
+# --- Validate binary ---
 if [ ! -f "$BIN_PATH" ]; then
   echo "❌ Binary not found at $BIN_PATH. Build first."
   exit 1
@@ -34,15 +34,8 @@ fi
 # Create directories
 mkdir -p "$CONFIG_DIR" "$DATA_DIR" "$LOG_DIR"
 rsync -a --ignore-existing "${CONFIG_SRC}/" "$CONFIG_DIR/"
-chown -R "${APP_NAME}:${APP_NAME}" "$CONFIG_DIR" "$DATA_DIR" "$LOG_DIR"
-chmod -R 755 "$CONFIG_DIR" "$DATA_DIR" "$LOG_DIR"
 
-# Install binary
-cp -f "$BIN_PATH" "$INSTALL_BIN_DIR/"
-chown "${APP_NAME}:${APP_NAME}" "${INSTALL_BIN_DIR}/${APP_NAME}"
-chmod 755 "${INSTALL_BIN_DIR}/${APP_NAME}"
-
-# Write systemd service
+# --- Create systemd service ---
 tee "$SERVICE_FILE" > /dev/null <<EOF
 [Unit]
 Description=Burlo Service
@@ -52,13 +45,11 @@ After=network.target
 Type=simple
 User=${APP_NAME}
 Group=${APP_NAME}
-ExecStart=${INSTALL_BIN_DIR}/${APP_NAME} --config ${CONFIG_DIR}
-WorkingDirectory=${DATA_DIR}
+WorkingDirectory=${ROOT_DIR}
+ExecStart=${ROOT_DIR}/${APP_NAME}
 Restart=on-failure
 RestartSec=5
-Environment=CONFIG_DIR=${CONFIG_DIR}
-Environment=DATA_DIR=${DATA_DIR}
-Environment=LOG_DIR=${LOG_DIR}
+Environment=PROJECT_ROOT=${ROOT_DIR}
 StandardOutput=journal
 StandardError=journal
 
@@ -66,10 +57,10 @@ StandardError=journal
 WantedBy=multi-user.target
 EOF
 
-# Reload + enable + start
+# --- Reload systemd and restart service ---
 systemctl daemon-reload
 systemctl enable "$SERVICE_NAME" >/dev/null 2>&1 || true
 systemctl restart "$SERVICE_NAME"
 
-echo "✅ Installation complete! Logs: journalctl -u $SERVICE_NAME -f"
-
+echo "✅ Installation complete!"
+echo "Logs: journalctl -u $SERVICE_NAME -f"

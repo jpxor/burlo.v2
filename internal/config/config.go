@@ -71,6 +71,7 @@ type Config struct {
 	// pass to all services alongside config
 	EventBus *eventbus.Bus
 	DataDir  string
+	RootDir  string
 }
 
 func LoadFile(path string) *Config {

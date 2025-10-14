@@ -81,25 +81,27 @@ func (c *ClientSync) closeAll() {
 }
 
 func (vt *VirtThermostat) buildHTTPHandler() http.Handler {
+	assetsDir := filepath.Join(vt.rootDir, "internal/thermostat/www")
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", vt.serveRoot)
+	mux.HandleFunc("/", vt.serveRoot(assetsDir))
 	mux.HandleFunc("/ws", vt.serveWebSockets(vt.clientQueue))
 	return mux
 }
 
-func (vt *VirtThermostat) serveRoot(w http.ResponseWriter, r *http.Request) {
-	const baseDir = "internal/thermostat/www"
+func (vt *VirtThermostat) serveRoot(assetsDir string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 
-	// If the user requests "/", serve the main thermostat.html file.
-	path := r.URL.Path
-	if path == "/" || path == "" {
-		http.ServeFile(w, r, filepath.Join(baseDir, "thermostat.html"))
-		return
+		// If the user requests "/", serve the main thermostat.html file.
+		path := r.URL.Path
+		if path == "/" || path == "" {
+			http.ServeFile(w, r, filepath.Join(assetsDir, "thermostat.html"))
+			return
+		}
+
+		// Otherwise, serve any file within the www directory.
+		fs := http.FileServer(http.Dir(assetsDir))
+		http.StripPrefix("/", fs).ServeHTTP(w, r)
 	}
-
-	// Otherwise, serve any file within the www directory.
-	fs := http.FileServer(http.Dir(baseDir))
-	http.StripPrefix("/", fs).ServeHTTP(w, r)
 }
 
 func (vt *VirtThermostat) serveWebSockets(msgQueue chan WebAppRequest) http.HandlerFunc {

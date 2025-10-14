@@ -36,29 +36,20 @@ import (
 
 func main() {
 
-	logDir := os.Getenv("LOG_DIR")
-	if logDir == "" {
-		logDir = "./log"
+	rootdir := os.Getenv("PROJECT_ROOT")
+	if rootdir == "" {
+		rootdir = "."
 	}
 
-	configDir := os.Getenv("CONFIG_DIR")
-	if configDir == "" {
-		configDir = "./config"
-	}
+	logger.Init(filepath.Join(rootdir, "var/logs/burlo.log"))
 
-	dataDir := os.Getenv("DATA_DIR")
-	if dataDir == "" {
-		dataDir = "./data"
-	}
-
-	logger.Init(filepath.Join(logDir, "burlo.log"))
-
-	appConf := config.LoadFile(filepath.Join(configDir, "burlo.json"))
-	modbusConf := modbus.LoadConfig(filepath.Join(configDir, "dx2w.modbus.yml"))
+	appConf := config.LoadFile(filepath.Join(rootdir, "var/config/burlo.json"))
+	modbusConf := modbus.LoadConfig(filepath.Join(rootdir, "var/config/dx2w.modbus.yml"))
 
 	// use conf to pass eventbus to whoever needs it
 	appConf.EventBus = eventbus.New()
-	appConf.DataDir = dataDir
+	appConf.DataDir = filepath.Join(rootdir, "var/cache")
+	appConf.RootDir = rootdir
 
 	ctx, ctxCancel := appctx.New()
 
