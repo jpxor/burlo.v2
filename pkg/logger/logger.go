@@ -51,6 +51,10 @@ func Init(logPath string) error {
 		mw := io.MultiWriter(os.Stdout, logFile)
 		baseLogger = log.New(mw, "", log.LstdFlags)
 
+		if baseLogger == nil {
+			panic("failed to create base logger")
+		}
+
 		// enable debug from env at startup if wanted
 		if os.Getenv("DEBUG") != "" {
 			debugEnabled = true
