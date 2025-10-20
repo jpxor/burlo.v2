@@ -104,7 +104,7 @@ func (c *loggerService) filter(keys []string, allData map[string]dx2w.HistoryEnt
 				c.log.Error("invalid type for key %q: %T", key, entry.Value)
 			}
 		} else {
-			c.log.Error("missing or invalid data for key %q", key)
+			c.log.Error("missing or invalid data for key %q (%+v)", key, entry)
 		}
 	}
 	return result
