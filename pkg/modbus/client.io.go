@@ -154,7 +154,7 @@ func (c *Client) ReadValue(name string) (any, error) {
 		return nil, fmt.Errorf("unsupported data type %q for register %q", regDef.DataType, name)
 	}
 
-	// if requires scaling, always return float64
+	// if requires scaling, always return float32
 	valf64 = valf64*regDef.Scale + regDef.Offset
 	return float32(valf64), nil
 }

@@ -109,12 +109,16 @@ func (c *Client) retry(op func() error) error {
 			return nil
 		}
 		if !isConnError(err) {
-			return err
+			c.log.Debug("retry after err: %+v", err)
+			continue
 		}
 
 		c.log.Error("connection error: %v — reconnecting...", err)
 		c.connectWithRetry() // blocks until connected
 	}
+	c.log.Error("too many retries: %+v", err)
+	c.log.Error("will attemp reconnect")
+	c.connectWithRetry()
 	return err
 }
 
