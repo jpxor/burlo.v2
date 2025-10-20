@@ -47,7 +47,7 @@ func main() {
 	appConfigFile := filepath.Join(rootdir, "var/config/burlo.json")
 	appConf := config.LoadFile(appConfigFile)
 
-	modbusConfigFile := filepath.Join(rootdir, "var/config/modbus.json")
+	modbusConfigFile := filepath.Join(rootdir, "var/config/dx2w.modbus.yml")
 	modbusConf := modbus.LoadConfig(modbusConfigFile)
 
 	// use conf to pass eventbus to whoever needs it
