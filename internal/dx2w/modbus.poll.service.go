@@ -147,15 +147,23 @@ func (s *HistoryService) pollRegisters(names []string) {
 		val, err := s.client.ReadValue(name)
 		s.log.Debug("ReadValue %s : %+v | %+v", name, val, err)
 
+		s.mu.Lock()
+
 		if err != nil {
+			// Copy previous history slice (may be empty)
+			var prevValue any
+			if len(s.history[name]) > 0 {
+				prevValue = s.history[name][len(s.history[name])-1].Value
+			}
 			entry.Error = err.Error()
+			entry.Value = prevValue
 		} else {
 			entry.Value = val
 		}
 
-		s.mu.Lock()
 		s.history[name] = append(s.history[name], entry)
 
+		// Trim history older than 24h
 		cutoff := time.Now().Add(-24 * time.Hour)
 		entries := s.history[name]
 		idx := 0
