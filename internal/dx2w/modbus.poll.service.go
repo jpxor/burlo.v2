@@ -150,6 +150,10 @@ func (s *HistoryService) pollRegisters(names []string) {
 		s.mu.Lock()
 
 		if err != nil {
+			err = invalidValueErrorDetection(name, val, s.history)
+		}
+
+		if err != nil {
 			// Copy previous history slice (may be empty)
 			var prevValue any
 			if len(s.history[name]) > 0 {
