@@ -96,7 +96,7 @@ func anyAsNumber(v any) (float64, bool) {
 func (c *loggerService) filter(keys []string, allData map[string]dx2w.HistoryEntry) map[string]float64 {
 	result := make(map[string]float64)
 	for _, key := range keys {
-		if entry, ok := allData[strings.ToLower(key)]; ok && entry.Value != nil {
+		if entry, ok := allData[strings.ToLower(key)]; ok && entry.Value != nil && entry.Error == "" {
 			// Safely type-assert
 			if val, ok := anyAsNumber(entry.Value); ok {
 				result[key] = val
