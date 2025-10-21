@@ -151,6 +151,7 @@ func (s *HistoryService) pollRegisters(names []string) {
 
 		if err != nil {
 			err = invalidValueErrorDetection(name, val, s.history)
+			s.log.Error("Invalid value detected: %s (%v): %v", name, val, err)
 		}
 
 		if err != nil {
