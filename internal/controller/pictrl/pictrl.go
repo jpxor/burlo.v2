@@ -37,48 +37,55 @@ type PIController struct {
 // Update returns the PI output in °C adjustment
 func (pi *PIController) Update(setpoint, measurement float64) float64 {
 	now := time.Now()
-	dt := 1.0
-	if !pi.lastTime.IsZero() {
-		dt = now.Sub(pi.lastTime).Seconds()
-		if dt <= 0 {
-			dt = 1.0
-		}
+	dt := now.Sub(pi.lastTime).Seconds()
+
+	// Skip integration if called too soon or first run
+	if dt <= 0 {
+		dt = 0
+	}
+	if pi.lastTime.IsZero() {
+		dt = 0
 	}
 	pi.lastTime = now
 
-	// error with deadband
+	// Compute error with deadband
 	err := setpoint - measurement
 	if math.Abs(err) < pi.Deadband {
-		pi.log.Debug("within deadbad, no error")
+		pi.log.Debug("within deadband, no error")
 		err = 0
 	}
 
-	// integrate error with optional decay
-	pi.intErr += err * dt
-	if pi.DecayFactor > 0 && pi.DecayFactor < 1.0 {
-		pi.intErr *= pi.DecayFactor
+	// --- Integral term ---
+	if dt > 0 {
+		pi.intErr += err * dt
 	}
 
-	// PI output
+	// Apply time-based decay: decayFactor = fraction that remains after 1 s
+	// For example: 0.99 means lose 1% per second.
+	if pi.DecayFactor > 0 && pi.DecayFactor < 1.0 && dt > 0 {
+		// Convert decayFactor from per-second rate to elapsed-time equivalent
+		pi.intErr *= math.Pow(pi.DecayFactor, dt)
+	}
+
+	// --- Compute raw output ---
 	output := pi.Kp*err + pi.Ki*pi.intErr
 
-	// clamp output and apply anti-windup
+	// --- Clamp and optional anti-windup ---
+	clamped := false
 	if output > pi.OutputMax {
-		pi.log.Debug("clamping output to max")
 		output = pi.OutputMax
-		if pi.AntiWindup {
-			pi.intErr -= err * dt
-		}
-	}
-	if output < pi.OutputMin {
-		pi.log.Debug("clamping output to min")
+		clamped = true
+	} else if output < pi.OutputMin {
 		output = pi.OutputMin
-		if pi.AntiWindup {
-			pi.intErr -= err * dt
-		}
+		clamped = true
 	}
 
-	pi.log.Debug("proportionalErr=%0.1f°C, integralErr=%0.1f°C", err, pi.intErr)
+	if clamped && pi.AntiWindup && dt > 0 {
+		// Roll back the last integral step to prevent windup
+		pi.intErr -= err * dt
+	}
+
+	pi.log.Debug("dt=%.2fs, err=%.2f°C, intErr=%.2f, output=%.2f°C", dt, err, pi.intErr, output)
 	return output
 }
 
